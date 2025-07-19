@@ -26,19 +26,24 @@ export default function ProductCard({
   }
 
   const handleAddToCart = () => {
-    const cart: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Please log in or register first!');
+    window.location.href = '/login';
+    return;
+  }
 
-    // Check if already in cart
-    const existingIndex = cart.findIndex((item: CartItem) => item.id === id);
-    if (existingIndex !== -1) {
-      cart[existingIndex].quantity += 1;
-    } else {
-      cart.push({ id, title, price, thumbnail, quantity: 1 });
-    }
+  const cart: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
+  const existingIndex = cart.findIndex((item: CartItem) => item.id === id);
+  if (existingIndex !== -1) {
+    cart[existingIndex].quantity += 1;
+  } else {
+    cart.push({ id, title, price, thumbnail, quantity: 1 });
+  }
 
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert(`${title} added to cart!`);
-  };
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert(`${title} added to cart!`);
+};
 
   return (
     <div className="group bg-white shadow-xl hover:shadow-2xl rounded-2xl overflow-hidden transform transition duration-300 hover:-translate-y-1">
