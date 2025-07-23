@@ -25,7 +25,12 @@ export default function ProfilePage() {
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser: User = JSON.parse(storedUser);
+        setUser(parsedUser);
+      } catch (err) {
+        console.error('Failed to parse user from localStorage', err);
+      }
     }
   }, []);
 
@@ -42,11 +47,12 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-3xl font-bold text-blue-700 mb-6">User Profile</h2>
         <div className="space-y-4">
-          <p><span className="font-semibold">Name:</span> {user.name.firstname} {user.name.lastname}</p>
+          <p><span className="font-semibold">ID:</span> {user.id}</p>
           <p><span className="font-semibold">Username:</span> {user.username}</p>
-          <p><span className="font-semibold">Email:</span> {user.email}</p>
+          <p><span className="font-semibold">City:</span> {user.city}</p>
           <p><span className="font-semibold">Phone:</span> {user.phone}</p>
-          <p><span className="font-semibold">Address:</span> {user.address.number} {user.address.street}, {user.address.city}, {user.address.zipcode}</p>
+          <p><span className="font-semibold">Address:</span>  {user.street}, {user.city}, {user.zipcode}</p>
+          <p><span className="font-semibold">Full Name:</span> {user.firstname} {user.lastname}</p>
         </div>
       </div>
     </div>

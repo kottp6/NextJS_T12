@@ -1,10 +1,22 @@
 'use client';
-import Link from 'next/link';
-import { useState } from 'react';
 
-// don't use state separate from component
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem('token');
+    setIsLoggedIn(!!user);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    window.location.href = '/login'; // redirect to login
+  };
 
   return (
     <nav className="bg-blue-600 text-white px-6 py-4 flex justify-between items-center">
@@ -17,6 +29,25 @@ const Navbar = () => {
         <li><Link href="/product">Product</Link></li>
         <li><Link href="/category">Category</Link></li>
         <li><Link href="/cart">Cart</Link></li>
+
+        {!isLoggedIn ? (
+          <>
+            <li><Link href="/login">Login</Link></li>
+            <li><Link href="/register">Register</Link></li>
+          </>
+        ) : (
+          <>
+            <li><Link href="/profile">Profile</Link></li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="text-white hover:text-gray-300"
+              >
+                Logout
+              </button>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );
